@@ -747,7 +747,7 @@ GROUP BY brand;
     </tr>
     <tr>
         <td>Adidas</td>
-        <td>33.452427184465606</td>
+        <td>33.4524</td>
     </tr>
 </table>
 
