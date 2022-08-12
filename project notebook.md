@@ -743,7 +743,7 @@ GROUP BY brand;
     </tr>
     <tr>
         <td>Nike</td>
-        <td>0.0</td>
+        <td>0.0000</td>
     </tr>
     <tr>
         <td>Adidas</td>
