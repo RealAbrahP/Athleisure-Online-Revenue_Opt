@@ -1,6 +1,6 @@
-## 1. Counting missing values
+## Optimizing Online Sportswear revenue
 <p>Sports clothing and athleisure attire is a huge industry, worth approximately <a href="https://www.statista.com/statistics/254489/total-revenue-of-the-global-sports-apparel-market/">$193 billion in 2021</a> with a strong growth forecast over the next decade! </p>
-<p>In this notebook, we play the role of a product analyst for an online sports clothing company. The company is specifically interested in how it can improve revenue. We will dive into product data such as pricing, reviews, descriptions, and ratings, as well as revenue and website traffic, to produce recommendations for its marketing and sales teams.  </p>
+<p>In this notebook, we will look trough som Nike and Adidas sales data to improve revenue for a hypothetical online sports clothing ecommerce company. We will dive into product data such as pricing, reviews, descriptions, and ratings, as well as revenue and website traffic, to produce recommendations for its marketing and sales teams.  </p>
 <p>The database provided to us, <code>sports</code>, contains five tables, with <code>product_id</code> being the primary key for all of them: </p>
 <h3 id="info"><code>info</code></h3>
 <table>
@@ -142,11 +142,11 @@
 </tr>
 </tbody>
 </table>
-<p>We will be dealing with missing data as well as numeric, string, and timestamp data types to draw insights about the products in the online store. Let's start by finding out how complete the data is.</p>
+<p> Let's start by finding out how complete the data is.</p>
 
 
 
-## 2. Nike vs Adidas pricing
+## Nike vs Adidas pricing
 <p>We can see the database contains 3,179 products in total. Of the columns we previewed, only one &mdash; <code>last_visited</code> &mdash; is missing more than five percent of its values. Now let's turn our attention to pricing. </p>
 <p>How do the price points of Nike and Adidas products differ? Answering this question can help us build a picture of the company's stock range and customer market. We will run a query to produce a distribution of the <code>listing_price</code> and the count for each price, grouped by <code>brand</code>. </p>
 
@@ -615,9 +615,9 @@ ORDER BY listing_price DESC;
 
 
 
-## 3. Labeling price ranges
+## Labeling price ranges
 <p>It turns out there are 77 unique prices for the products in our database, which makes the output of our last query quite difficult to analyze. </p>
-<p>Let's build on our previous query by assigning labels to different price ranges, grouping by <code>brand</code> and <code>label</code>. We will also include the total <code>revenue</code> for each price range and <code>brand</code>. </p>
+<p>Next we will build on our previous query by assigning labels to different price ranges, grouping by <code>brand</code> and <code>label</code>. We will also include the total <code>revenue</code> for each price range and <code>brand</code>. </p>
 
 
 ```python
@@ -710,15 +710,15 @@ ORDER BY total_revenue DESC;
 
 
 
-## 4. Average discount by brand
+## Average discount by brand
 <p>Interestingly, grouping products by brand and price range allows us to see that Adidas items generate more total revenue regardless of price category! Specifically, <code>"Elite"</code> Adidas products priced \$129 or more typically generate the highest revenue, so the company can potentially increase revenue by shifting their stock to have a larger proportion of these products!</p>
-<p>Note we have been looking at <code>listing_price</code> so far. The <code>listing_price</code> may not be the price that the product is ultimately sold for. To understand <code>revenue</code> better, let's take a look at the <code>discount</code>, which is the percent reduction in the <code>listing_price</code> when the product is actually sold. We would like to know whether there is a difference in the amount of <code>discount</code> offered between brands, as this could be influencing <code>revenue</code>.</p>
+<p>Note we have been looking at <code>listing_price</code> so far. The <code>listing_price</code> may not be the price that the product is ultimately sold for. To understand <code>revenue</code> better, we will take a look at the <code>discount</code>, which is the percent reduction in the <code>listing_price</code> when the product is actually sold. We would like to know whether there is a difference in the amount of <code>discount</code> offered between brands, as this could be influencing <code>revenue</code>.</p>
 
 
 ```python
 %%sql
 
-
+--Calculates discount by brand
 SELECT 
 brands.brand,
 TO_CHAR(avg(discount),'fm0D0000%') AS average_discount 
@@ -753,10 +753,10 @@ GROUP BY brand;
 
 
 
-## 5. Correlation between revenue and reviews
+## Correlation between revenue and reviews
 <p>Strangely, no <code>discount</code> is offered on Nike products! In comparison, not only do Adidas products generate the most revenue, but these products are also heavily discounted! </p>
 <p>To improve revenue further, the company could try to reduce the amount of discount offered on Adidas products, and monitor sales volume to see if it remains stable. Alternatively, it could try offering a small discount on Nike products. This would reduce average revenue for these products, but may increase revenue overall if there is an increase in the volume of Nike products sold. </p>
-<p>Now explore whether relationships exist between the columns in our database. We will check the strength and direction of a correlation between <code>revenue</code> and <code>reviews</code>. </p>
+<p>We will now explore whether relationships exist between the columns in our database by checking the strength and direction of a correlation between <code>revenue</code> and <code>reviews</code>. </p>
 
 
 ```python
@@ -789,7 +789,7 @@ ON reviews.product_id = finance.product_id;
 
 
 
-## 6. Ratings and reviews by product description length
+## Ratings and reviews by product description length
 <p>Interestingly, there is a strong positive correlation between <code>revenue</code> and <code>reviews</code>. This means, potentially, if we can get more reviews on the company's website, it may increase sales of those items with a larger number of reviews. </p>
 <p>Perhaps the length of a product's <code>description</code> might influence a product's <code>rating</code> and <code>reviews</code> &mdash; if so, the company can produce content guidelines for listing products on their website and test if this influences <code>revenue</code>. Let's check this out!</p>
 
@@ -797,8 +797,8 @@ ON reviews.product_id = finance.product_id;
 ```python
 %%sql
 
--- Calculates description_length and separates them inro increments of 100
--- Converts rating to a numeric data type and calculate average_rating
+-- Calculates description_length and separates them into increments of 100
+-- Converts rating to a numeric data type so we can calculate average_rating
 
 SELECT 
 TRUNC(LENGTH(description), -2) AS description_length,
@@ -857,19 +857,17 @@ ORDER BY description_length;
 
 
 
-## 7. Reviews by month and brand
+## Reviews by month and brand
 <p>Unfortunately, there doesn't appear to be a clear pattern between the length of a product's <code>description</code> and its <code>rating</code>.</p>
 <p>As we know a correlation exists between <code>reviews</code> and <code>revenue</code>, one approach the company could take is to run experiments with different sales processes encouraging more reviews from customers about their purchases, such as by offering a small discount on future purchases. </p>
-<p>Let's take a look at the volume of <code>reviews</code> by month to see if there are any trends or gaps we can look to exploit.</p>
+<p>Next we will take a look at the volume of <code>reviews</code> by month to see if there are any trends or gaps we can look to exploit.</p>
 
 
 ```python
 %%sql
 
--- Select brand, month from last_visited, and a count of all products in reviews aliased as num_reviews
--- Join traffic with reviews and brands on product_id
--- Group by brand and month, filtering out missing values for brand and month
--- Order the results by brand and month
+-- Calculates the number of reviews per month grouped by brand
+
 SELECT
 b.brand,
 date_part('month', t.last_visited) as month,
@@ -1023,7 +1021,7 @@ Order BY b.brand, month
 
 
 
-## 8. Footwear product performance
+## Footwear product performance
 <p>Looks like product reviews are highest in the first quarter of the calendar year, so there is scope to run experiments aiming to increase the volume of reviews in the other nine months!</p>
 <p>So far, we have been primarily analyzing Adidas vs Nike products. Now, let's switch our attention to the type of products being sold. As there are no labels for product type, we will create a Common Table Expression (CTE) that filters <code>description</code> for keywords, then use the results to find out how much of the company's stock consists of footwear products and the median <code>revenue</code> generated by these items.</p>
 
@@ -1031,10 +1029,8 @@ Order BY b.brand, month
 ```python
 %%sql
 
--- Create the footwear CTE, containing description and revenue
--- Filter footwear for products with a description containing %shoe%, %trainer, or %foot%
--- Also filter for products that are not missing values for description
--- Calculate the number of products and median revenue for footwear products
+-- Creates the footwear CTE to fillter for footwear products
+-- Calculates the number of products and median revenue for footwear products
 
 WITH footwear AS
 (SELECT description,
@@ -1075,18 +1071,15 @@ FROM footwear;
 
 
 
-## 9. Clothing product performance
-<p>Recall from the first task that we found there are 3,117 products without missing values for <code>description</code>. Of those, 2,700 are footwear products, which accounts for around 85% of the company's stock. They also generate a median revenue of over $3000 dollars!</p>
-<p>This is interesting, but we have no point of reference for whether footwear's <code>median_revenue</code> is good or bad compared to other products. So, for our final task, let's examine how this differs to clothing products. We will re-use <code>footwear</code>, adding a filter afterward to count the number of products and <code>median_revenue</code> of products that are not in <code>footwear</code>.</p>
+## Clothing product performance
+<p>In the beginning of this study we found there are 3,117 products without missing values for <code>description</code>. Of those, 2,700 are footwear products, which accounts for around 85% of the company's stock. They also generate a median revenue of over $3000 dollars!</p>
+<p>This is interesting, but we have no point of reference for whether footwear's <code>median_revenue</code> is good or bad compared to other products. So, we will examine how this differs to clothing products. We will re-use our CTE <code>footwear</code>, adding a filter afterward to count the number of products and <code>median_revenue</code> of products that are not labeled as <code>footwear</code>.</p>
 
 
 ```python
 %%sql
 
--- Copy the footwear CTE from the previous task
--- Calculate the number of products in info and median revenue from finance
--- Inner join info with finance on product_id
--- Filter the selection for products with a description not in footwear
+-- Uses footwear CTE from last query to analyze non footwear revenue
 
 WITH footwear AS
 (SELECT description,
@@ -1129,4 +1122,11 @@ WHERE i.description NOT IN (SELECT description FROM footwear);
     </tr>
 </table>
 
+<p>Based on the table above we can see that clothing revenue is not sold nearly as much as footwear</p>
 
+## Conclusions/Reccomendations
+<p>Given the analysis we have completed above we can conlude that Addidas seems to be the most profitable and best selling brand and footwear is the most sold category of items. There is also a positive correlation with the amount of reviews and revenue. A big note to take into account is that Nike products are not discounted nearly as much as Adidas products</p>
+<p>Using these conclusions, my reccomendations are as follows.</p>
+<p>* I would suggest making a marketing campaign to try and offer Nike products at a discounted price for a limited time. We can then further analyze to compare sales and see if it has a significant affect on revenue</p>
+<p>* There is a clear correlation between reviews and revenue. Perhaps we can have our marketing team send follow up emails requesting a review from our customers periodically along with delivery updates.</p>
+<p>* Lastly I would reccoment that we increase the inventory and selection of footwear items. It is clear that these are the most popular items therefore increasing inventory can help us further determine which types of footwear tend to be the best sellers in a future analysis</p>
