@@ -661,43 +661,43 @@ ORDER BY total_revenue DESC;
     <tr>
         <td>Adidas</td>
         <td>849</td>
-        <td>4626980.069999999</td>
+        <td>4626980.07</td>
         <td>Expensive</td>
     </tr>
     <tr>
         <td>Adidas</td>
         <td>1060</td>
-        <td>3233661.060000001</td>
+        <td>3233661.06</td>
         <td>Average</td>
     </tr>
     <tr>
         <td>Adidas</td>
         <td>307</td>
-        <td>3014316.8299999987</td>
+        <td>3014316.83</td>
         <td>Elite</td>
     </tr>
     <tr>
         <td>Adidas</td>
         <td>359</td>
-        <td>651661.1200000002</td>
+        <td>651661.12</td>
         <td>Budget</td>
     </tr>
     <tr>
         <td>Nike</td>
         <td>357</td>
-        <td>595341.0199999992</td>
+        <td>595341.02</td>
         <td>Budget</td>
     </tr>
     <tr>
         <td>Nike</td>
         <td>82</td>
-        <td>128475.59000000003</td>
+        <td>128475.59</td>
         <td>Elite</td>
     </tr>
     <tr>
         <td>Nike</td>
         <td>90</td>
-        <td>71843.15000000004</td>
+        <td>71843.15</td>
         <td>Expensive</td>
     </tr>
     <tr>
